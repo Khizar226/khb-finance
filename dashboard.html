@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - KHB Finance</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans hidden" id="appBody">
+    
+    <div class="flex h-screen overflow-hidden">
+        <aside class="hidden md:flex w-64 bg-blue-700 dark:bg-gray-800 text-white flex-col">
+            <div class="p-6 text-2xl font-bold border-b border-blue-600 dark:border-gray-700">KHB Finance</div>
+            <nav class="flex-1 p-4 flex flex-col gap-2">
+                <a href="#" class="p-3 bg-blue-800 dark:bg-gray-700 rounded-lg font-medium">Dashboard</a>
+                <a href="#" class="p-3 hover:bg-blue-600 dark:hover:bg-gray-700 rounded-lg">Ledger & Reports</a>
+                <a href="#" class="p-3 hover:bg-blue-600 dark:hover:bg-gray-700 rounded-lg">Assets & Net Worth</a>
+            </nav>
+            <div class="p-4 border-t border-blue-600 dark:border-gray-700">
+                <button id="logoutBtn" class="w-full p-2 bg-red-500 hover:bg-red-600 rounded font-bold">Log Out</button>
+            </div>
+        </aside>
+
+        <main class="flex-1 flex flex-col overflow-y-auto">
+            <header class="p-4 md:p-6 flex justify-between items-center bg-white dark:bg-gray-800 shadow-sm">
+                <h2 class="text-xl md:text-2xl font-bold">Dashboard Summary</h2>
+                <div class="flex items-center gap-2 md:gap-4">
+                    <button id="themeToggle" class="p-2 bg-gray-200 dark:bg-gray-700 rounded-full">🌓</button>
+                    <button id="openModalBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-3 md:px-4 py-2 rounded-lg font-bold shadow text-sm md:text-base">+ Add Transaction</button>
+                </div>
+            </header>
+
+            <div class="p-4 md:p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow">
+                    <h3 class="text-gray-500 dark:text-gray-400 text-sm font-semibold">Total Income</h3>
+                    <p class="text-3xl font-bold text-green-500 mt-2" id="totalIncomeCard">Rs. 0</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow">
+                    <h3 class="text-gray-500 dark:text-gray-400 text-sm font-semibold">Total Expenses</h3>
+                    <p class="text-3xl font-bold text-red-500 mt-2" id="totalExpenseCard">Rs. 0</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow">
+                    <h3 class="text-gray-500 dark:text-gray-400 text-sm font-semibold">Total Balance</h3>
+                    <p class="text-3xl font-bold text-blue-500 mt-2" id="totalBalanceCard">Rs. 0</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow">
+                    <h3 class="text-gray-500 dark:text-gray-400 text-sm font-semibold">Net Worth</h3>
+                    <p class="text-3xl font-bold text-purple-500 mt-2" id="netWorthCard">Rs. 0</p>
+                </div>
+            </div>
+
+            <div class="px-4 md:px-6 mb-6">
+                 <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow border-dashed border-2 border-gray-300 dark:border-gray-600">
+                     <h3 class="font-bold mb-2 text-lg">Bulk Upload (CSV)</h3>
+                     <p class="text-sm text-gray-500 mb-4">Upload a CSV file with columns: Date, Type, Head, Amount, Remarks.</p>
+                     <input type="file" id="csvFileInput" accept=".csv" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                     <button id="processCsvBtn" class="mt-4 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow font-bold">Process CSV</button>
+                 </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="transactionModal" class="hidden fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-4">
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-xl w-full max-w-lg shadow-2xl overflow-y-auto max-h-[90vh]">
+            <h2 class="text-xl font-bold mb-4 border-b pb-2">New Entry</h2>
+            <form id="transactionForm" class="flex flex-col gap-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Type</label>
+                        <select id="transType" class="w-full p-2 border rounded bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+                            <option value="Income">Income</option>
+                            <option value="Expense">Expense</option>
+                            <option value="Asset">Asset Addition</option>
+                            <option value="Loan">Loan Given/Returned</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Amount (PKR)</label>
+                        <input type="number" id="transAmount" required class="w-full p-2 border rounded bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium mb-1">Account Head</label>
+                    <input list="accountHeads" id="transHead" required placeholder="e.g. Meezan Bank, Web Dev, Karachi Home Utilities" class="w-full p-2 border rounded bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+                    <datalist id="accountHeads">
+                        <option value="Meezan Bank">
+                        <option value="Nayapay">
+                        <option value="Alfalah">
+                        <option value="Family Wallet">
+                        <option value="Web Development">
+                        <option value="Digital Marketing">
+                        <option value="Karachi Home Utilities">
+                        <option value="Family Kids Activities">
+                    </datalist>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium mb-1">Date & Time <span class="text-xs text-gray-500">(Leave empty for current timestamp)</span></label>
+                    <input type="datetime-local" id="transDate" class="w-full p-2 border rounded bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium mb-1">Remarks / Notes</label>
+                    <textarea id="transRemarks" rows="3" class="w-full p-2 border rounded bg-gray-50 dark:bg-gray-700 dark:border-gray-600"></textarea>
+                </div>
+
+                <div class="flex justify-end gap-3 mt-4">
+                    <button type="button" id="closeModalBtn" class="px-4 py-2 bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-500 rounded font-bold transition">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded font-bold shadow transition">Save Transaction</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script type="module" src="app.js"></script>
+    <script type="module" src="dashboard.js"></script>
+</body>
+</html>
