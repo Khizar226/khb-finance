@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finance Fortress | Personal PKR Dashboard</title>
+    <meta name="description" content="Personal finance dashboard for PKR income, expenses, loans, assets, budgeting, and secure ledger reporting.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <main class="landing">
+        <section class="container landing-panel">
+            <span class="badge">Private Finance OS • PKR-first</span>
+            <h1>Control Every Rupee With One Secure Dashboard</h1>
+            <p class="lead">
+                Track daily income and expenses, loan receivable/payable, account-wise balances, assets, and future funds
+                with strong login security, PIN lock, authenticator 2FA, and recovery codes.
+            </p>
+
+            <div class="landing-grid">
+                <div class="kpi-chip">
+                    <strong>Ledger Speed</strong>
+                    <span>Instant</span>
+                </div>
+                <div class="kpi-chip">
+                    <strong>Currency</strong>
+                    <span>PKR</span>
+                </div>
+                <div class="kpi-chip">
+                    <strong>Access Protection</strong>
+                    <span>2FA + PIN</span>
+                </div>
+                <div class="kpi-chip">
+                    <strong>Export</strong>
+                    <span>CSV/PDF/PNG/JPG</span>
+                </div>
+            </div>
+
+            <div class="btn-row">
+                <a class="btn btn-primary" href="auth.html?mode=login">Log In</a>
+                <a class="btn btn-soft" href="auth.html?mode=signup">Sign Up</a>
+                <button class="btn btn-soft" id="themeToggleBtn" type="button">Theme</button>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        (function initTheme() {
+            const saved = localStorage.getItem("finance_theme");
+            if (saved === "dark" || saved === "light") {
+                document.documentElement.setAttribute("data-theme", saved);
+            }
+        })();
+
+        document.getElementById("themeToggleBtn").addEventListener("click", () => {
+            const html = document.documentElement;
+            const next = html.getAttribute("data-theme") === "dark" ? "light" : "dark";
+            html.setAttribute("data-theme", next);
+            localStorage.setItem("finance_theme", next);
+        });
+    </script>
+</body>
+</html>

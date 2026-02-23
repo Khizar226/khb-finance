@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Access | Finance Fortress</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <main class="auth-layout">
+        <section class="auth-card">
+            <aside class="auth-side">
+                <h1>Finance Fortress</h1>
+                <p>Your personal financial operating system with layered security.</p>
+                <ul>
+                    <li>Email/Password + optional Google sign-in</li>
+                    <li>Personal 6-digit Finance PIN</li>
+                    <li>Google Authenticator compatible 2FA</li>
+                    <li>One-time recovery backup codes</li>
+                </ul>
+            </aside>
+
+            <section class="auth-main">
+                <div class="btn-row" style="justify-content: space-between; margin-bottom: 12px;">
+                    <a class="btn btn-soft" href="index.html">Back</a>
+                    <button class="btn btn-soft" id="themeToggleBtn" type="button">Theme</button>
+                </div>
+
+                <div id="authSection">
+                    <div class="auth-tabs">
+                        <button type="button" id="loginTab" class="auth-tab active">Login</button>
+                        <button type="button" id="signupTab" class="auth-tab">Sign Up</button>
+                    </div>
+
+                    <form id="authForm" novalidate>
+                        <div class="field signup-only hidden" id="nameFieldWrap">
+                            <label for="displayName">Full Name</label>
+                            <input class="input" id="displayName" type="text" autocomplete="name" placeholder="Your name">
+                        </div>
+
+                        <div class="field">
+                            <label for="email">Email</label>
+                            <input class="input" id="email" type="email" autocomplete="email" required placeholder="you@example.com">
+                        </div>
+
+                        <div class="field">
+                            <label for="password">Password</label>
+                            <input class="input" id="password" type="password" autocomplete="current-password" required placeholder="Minimum 10 characters">
+                        </div>
+
+                        <div class="field signup-only hidden" id="confirmFieldWrap">
+                            <label for="confirmPassword">Confirm Password</label>
+                            <input class="input" id="confirmPassword" type="password" autocomplete="new-password" placeholder="Repeat password">
+                        </div>
+
+                        <div class="field signup-only hidden" id="pinFieldWrap">
+                            <label for="financePin">Finance PIN (6 digits)</label>
+                            <input class="input" id="financePin" type="password" inputmode="numeric" maxlength="6" placeholder="******">
+                            <div class="helper">Used at each login before dashboard unlock.</div>
+                        </div>
+
+                        <button class="btn btn-primary" type="submit" id="authSubmitBtn">Log In</button>
+                    </form>
+
+                    <div class="mt-2">
+                        <button class="btn btn-soft" id="googleLoginBtn" type="button">Continue With Google</button>
+                    </div>
+                </div>
+
+                <section id="setupSection" class="hidden">
+                    <h2>Set Up Google Authenticator</h2>
+                    <p class="muted">Scan this QR code in Google Authenticator, Authy, or Microsoft Authenticator.</p>
+
+                    <div class="field hidden" id="setupPinWrap">
+                        <label for="setupPin">Set Finance PIN (6 digits)</label>
+                        <input id="setupPin" class="input" type="password" maxlength="6" inputmode="numeric" placeholder="******">
+                    </div>
+
+                    <div class="qr-wrap">
+                        <img id="totpQrImage" alt="Authenticator QR code" width="180" height="180">
+                        <div>
+                            <div class="helper">Manual secret key</div>
+                            <div id="manualSecret" style="font-family: 'JetBrains Mono', monospace; font-size: 13px; margin-top: 6px;"></div>
+                            <p class="helper mt-1">Save recovery codes. Each code works once.</p>
+                        </div>
+                    </div>
+
+                    <ul class="recovery-list" id="recoveryList"></ul>
+
+                    <div class="btn-row mt-1">
+                        <button class="btn btn-soft" type="button" id="downloadRecoveryBtn">Download Recovery Codes</button>
+                    </div>
+
+                    <div class="field mt-2">
+                        <label for="setupTotpCode">Enter 6-digit code to confirm setup</label>
+                        <input class="input" id="setupTotpCode" type="text" inputmode="numeric" maxlength="6" placeholder="123456">
+                    </div>
+
+                    <div class="btn-row">
+                        <button class="btn btn-primary" type="button" id="confirmSetupBtn">Enable 2FA & Continue</button>
+                        <button class="btn btn-soft" type="button" id="cancelSetupBtn">Cancel</button>
+                    </div>
+                </section>
+
+                <section id="challengeSection" class="hidden">
+                    <h2>Second Factor Verification</h2>
+                    <p class="muted">Enter your Finance PIN and authenticator code. You can use a recovery code instead of TOTP.</p>
+
+                    <div class="field">
+                        <label for="challengePin">Finance PIN</label>
+                        <input class="input" id="challengePin" type="password" inputmode="numeric" maxlength="6" placeholder="******">
+                    </div>
+
+                    <div class="field">
+                        <label for="challengeCode">Authenticator / Recovery code</label>
+                        <input class="input" id="challengeCode" type="text" placeholder="6-digit code or recovery code">
+                    </div>
+
+                    <div class="btn-row">
+                        <button class="btn btn-primary" type="button" id="verifyChallengeBtn">Verify & Open Dashboard</button>
+                        <button class="btn btn-soft" type="button" id="challengeSignOutBtn">Sign Out</button>
+                    </div>
+                </section>
+
+                <div id="authAlert" class="alert hidden"></div>
+            </section>
+        </section>
+    </main>
+
+    <script type="module" src="auth.js"></script>
+</body>
+</html>
