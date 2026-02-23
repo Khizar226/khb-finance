@@ -7,6 +7,7 @@ const appBody = document.getElementById('appBody');
 onAuthStateChanged(auth, (user) => {
     if (user) {
         appBody.classList.remove('hidden'); // Show app
+        loadDashboardData(user.uid); // <--- Add this line to start fetching data
     } else {
         window.location.href = "auth.html?mode=login"; // Kick back to login
     }
@@ -110,3 +111,4 @@ document.getElementById('processCsvBtn').addEventListener('click', () => {
     reader.readAsText(file);
 
 });
+
