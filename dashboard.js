@@ -23,6 +23,43 @@ document.getElementById('logoutBtn').addEventListener('click', async () => {
     }
 });
 
+// --- Real-time Dashboard Calculations ---
+function loadDashboardData(uid) {
+    // Only look for transactions belonging to the logged-in user
+    const q = query(collection(db, "transactions"), where("uid", "==", uid));
+
+    // onSnapshot listens for real-time updates
+    onSnapshot(q, (snapshot) => {
+        let totalIncome = 0;
+        let totalExpense = 0;
+        let totalAssets = 0;
+
+        snapshot.forEach((doc) => {
+            const data = doc.data();
+            const amount = parseFloat(data.amount) || 0;
+
+            if (data.type === "Income") {
+                totalIncome += amount;
+            } else if (data.type === "Expense") {
+                totalExpense += amount;
+            } else if (data.type === "Asset") {
+                totalAssets += amount;
+            }
+        });
+
+        // Calculate Balance and Net Worth
+        const totalBalance = totalIncome - totalExpense;
+        const netWorth = totalBalance + totalAssets; // Assumes assets add to net worth
+
+        // Update the HTML cards with formatting
+        document.getElementById('totalIncomeCard').innerText = `Rs. ${totalIncome.toLocaleString()}`;
+        document.getElementById('totalExpenseCard').innerText = `Rs. ${totalExpense.toLocaleString()}`;
+        document.getElementById('totalBalanceCard').innerText = `Rs. ${totalBalance.toLocaleString()}`;
+        document.getElementById('netWorthCard').innerText = `Rs. ${netWorth.toLocaleString()}`;
+    });
+}s
+
+
 // --- Theme Toggle ---
 const themeToggle = document.getElementById('themeToggle');
 const htmlEl = document.documentElement;
@@ -111,4 +148,5 @@ document.getElementById('processCsvBtn').addEventListener('click', () => {
     reader.readAsText(file);
 
 });
+
 
