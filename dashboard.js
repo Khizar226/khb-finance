@@ -1,6 +1,6 @@
 import { auth, db } from './app.js';
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
-import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+import { collection, addDoc, serverTimestamp, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
 // --- Authentication Check ---
 const appBody = document.getElementById('appBody');
@@ -108,4 +108,5 @@ document.getElementById('processCsvBtn').addEventListener('click', () => {
         fileInput.value = ""; // Reset file input
     };
     reader.readAsText(file);
+
 });
